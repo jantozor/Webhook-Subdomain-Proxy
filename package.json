@@ -1,0 +1,26 @@
+{
+    "name": "webhook-subdomain-proxy",
+  "version": "1.0.0",
+  "description": "Node.js app to dynamically create subdomains for webhooks and proxy traffic to user's IP address.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "webhook",
+    "proxy",
+    "subdomain",
+    "nodejs",
+    "express",
+    "server",
+    "dynamic-dns"
+  ],  
+  "author": "Jantozor",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.5",
+    "uuid": "^11.1.0"
+  }
+}
