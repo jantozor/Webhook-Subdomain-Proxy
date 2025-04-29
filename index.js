@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const port = 3000;
+const path = require('path');
 
 const SECRET_KEY = process.env.SECRET_KEY;
 const DOMAIN_NAME = process.env.DOMAIN_NAME;
@@ -13,7 +14,6 @@ const subdomainToIP = {};
 
 // To parse JSON in POST requests
 app.use(express.json());
-
 // Route to register a new webhook
 app.post('/register', (req, res) => {
     const { ip, wantedSubdomain } = req.body;
@@ -51,6 +51,15 @@ app.post('/register', (req, res) => {
 
     res.json({ webhookUrl: `https://${fullSubdomain}/` });
 });
+// Serve static homepage if host matches
+app.use((req, res, next) => {
+    const host = req.headers.host;
+    if (host === DOMAIN_NAME) {
+        express.static(path.join(__dirname, 'public'))(req, res, next);
+    } else {
+        next(); // passes control to next middleware
+    }
+});
 // app.post('/register', (req, res) => {
 //     const { ip } = req.body;
 //     if (!ip) {
@@ -71,7 +80,6 @@ app.post('/register', (req, res) => {
 app.use((req, res, next) => {
     const host = req.headers.host;
     const ip = subdomainToIP[host];
-
     if (ip) {
         console.log(`Proxying ${host} to ${ip}`);
         createProxyMiddleware({
